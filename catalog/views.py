@@ -6,9 +6,11 @@ def home(request):
 
 
 def contacts(request):
+    success = False
     if request.method == 'POST':
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         print(f'Обратная связь: {name} | {phone} | {message}')
-    return render(request, 'catalog/contacts.html')
+        success = True
+    return render(request, 'catalog/contacts.html', {'success': success})
