@@ -33,3 +33,16 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
+
+
+class Contact(models.Model):
+    country = models.CharField(max_length=100, verbose_name='Страна')
+    inn = models.CharField(max_length=20, verbose_name='ИНН')
+    address = models.CharField(max_length=255, verbose_name='Адрес')
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+
+    def __str__(self):
+        return f'{self.country}, {self.address}'
