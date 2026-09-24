@@ -10,6 +10,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: skystore
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      SECRET_KEY: ci-secret-key-not-for-production
+      DEBUG: 'True'
+      ALLOWED_HOSTS: '127.0.0.1,localhost'
+      DB_NAME: skystore
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
