@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block header %}Блог{% endblock %}
+
+{% block subheader %}
+<p class="lead">Полезные статьи, новости и обзоры от Skystore</p>
+{% endblock %}
+
+{% block content %}
+<div class="text-end mb-3">
+    <a href="{% url 'blog:blogpost_create' %}" class="btn btn-success">+ Добавить статью</a>
+</div>
+
+<div class="row">
+    {% for post in blogposts %}
+    <div class="col-md-6 mb-4">
+        <div class="card box-shadow">
+            {% if post.preview %}
+            <img src="{{ post.preview.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 250px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <h4 class="card-title">{{ post.title }}</h4>
+                <p class="text-muted small">
+                    {{ post.created_at|date:"d.m.Y H:i" }} | Просмотров: {{ post.views_count }}
+                </p>
+                <p class="card-text">{{ post.content|truncatechars:150 }}</p>
+                <a href="{% url 'blog:blogpost_detail' post.pk %}" class="btn btn-outline-primary">Читать далее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-muted">Опубликованных статей пока нет.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
