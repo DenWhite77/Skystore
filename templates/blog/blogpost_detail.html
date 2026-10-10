@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ blogpost.title }}{% endblock %}
+
+{% block header %}{{ blogpost.title }}{% endblock %}
+
+{% block subheader %}
+<p class="text-muted">
+    {{ blogpost.created_at|date:"d.m.Y H:i" }} | Просмотров: {{ blogpost.views_count }}
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        {% if blogpost.preview %}
+        <img src="{{ blogpost.preview.url }}" class="img-fluid mb-4" alt="{{ blogpost.title }}">
+        {% endif %}
+
+        <div class="mb-4">
+            {{ blogpost.content|linebreaks }}
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'blog:blogpost_list' %}" class="btn btn-outline-secondary">← К списку статей</a>
+            <a href="{% url 'blog:blogpost_update' blogpost.pk %}" class="btn btn-outline-primary">Редактировать</a>
+            <a href="{% url 'blog:blogpost_delete' blogpost.pk %}" class="btn btn-outline-danger">Удалить</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
