@@ -16,7 +16,11 @@
         <p class="text-muted">Категория: {{ product.category.name }}</p>
         <h3 class="text-primary">$ {{ product.price }}</h3>
         <p>{{ product.description }}</p>
-        <a href="{% url 'catalog:home' %}" class="btn btn-outline-primary">← Назад к каталогу</a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">← Назад к каталогу</a>
+            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-outline-primary">Редактировать</a>
+            <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-outline-danger">Удалить</a>
+        </div>
     </div>
 </div>
 {% endblock %}

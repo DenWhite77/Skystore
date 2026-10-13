@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from .forms import BlogPostForm
 from .models import BlogPost
 
 
@@ -23,7 +24,6 @@ class BlogPostDetailView(DetailView):
         obj.views_count += 1
         obj.save(update_fields=['views_count'])
 
-        # Поздравление при достижении 100 просмотров
         if obj.views_count == 100:
             send_mail(
                 subject=f'Поздравляем! Статья «{obj.title}» набрала 100 просмотров',
@@ -42,15 +42,15 @@ class BlogPostDetailView(DetailView):
 
 class BlogPostCreateView(CreateView):
     model = BlogPost
+    form_class = BlogPostForm          # ← было fields = (...)
     template_name = 'blog/blogpost_form.html'
-    fields = ('title', 'content', 'preview', 'is_published')
     success_url = reverse_lazy('blog:blogpost_list')
 
 
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
+    form_class = BlogPostForm          # ← было fields = (...)
     template_name = 'blog/blogpost_form.html'
-    fields = ('title', 'content', 'preview', 'is_published')
 
     def get_success_url(self):
         return reverse_lazy('blog:blogpost_detail', kwargs={'pk': self.object.pk})
