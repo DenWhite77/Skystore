@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Редактировать продукт{% else %}Новый продукт{% endif %}{% endblock %}
+
+{% block header %}{% if object %}Редактировать продукт{% else %}Новый продукт{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                {% if field.field.widget.input_type == 'checkbox' %}
+                <div class="mb-3 form-check">
+                    {{ field }}
+                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
