@@ -1,0 +1,78 @@
+[
+{
+  "model": "catalog.category",
+  "pk": 5,
+  "fields": {
+    "name": "Электроника",
+    "description": "Гаджеты и устройства"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 6,
+  "fields": {
+    "name": "Книги",
+    "description": "Печатные издания"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 7,
+  "fields": {
+    "name": "Одежда",
+    "description": "Мужская и женская одежда"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "name": "Смартфон",
+    "description": "Умный телефон",
+    "image": "",
+    "category": 5,
+    "price": "29990.00",
+    "created_at": "2026-09-24T06:11:54.537Z",
+    "updated_at": "2026-09-24T06:11:54.537Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 7,
+  "fields": {
+    "name": "Ноутбук",
+    "description": "Мощный ноутбук",
+    "image": "",
+    "category": 5,
+    "price": "79990.00",
+    "created_at": "2026-09-24T06:11:54.540Z",
+    "updated_at": "2026-09-24T06:11:54.540Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 8,
+  "fields": {
+    "name": "Мастер и Маргарита",
+    "description": "Классика",
+    "image": "",
+    "category": 6,
+    "price": "890.00",
+    "created_at": "2026-09-24T06:11:54.540Z",
+    "updated_at": "2026-09-24T06:11:54.540Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 9,
+  "fields": {
+    "name": "Футболка",
+    "description": "Хлопок 100%",
+    "image": "",
+    "category": 7,
+    "price": "1500.00",
+    "created_at": "2026-09-24T06:11:54.541Z",
+    "updated_at": "2026-09-24T06:11:54.541Z"
+  }
+}
+]

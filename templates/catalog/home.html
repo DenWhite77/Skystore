@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Skystore — каталог{% endblock %}
+
+{% block subheader %}
+<p class="lead">Skystore - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели продать</p>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="text-end mb-3">
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-success">+ Добавить продукт</a>
+</div>
+{% endif %}
+
+<div class="row text-center">
+    {% for product in page_obj %}
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">$ {{ product.price }}</h1>
+                <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                    <li>Категория: {{ product.category.name }}</li>
+                    <li>{{ product.description|truncatechars:100 }}</li>
+                </ul>
+                <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-muted">Продуктов пока нет.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Пагинация продуктов" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Назад</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">← Назад</span>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд →</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Вперёд →</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
