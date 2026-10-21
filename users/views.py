@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.core.mail import send_mail
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
 
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserProfileForm, UserRegisterForm
 
 
 class RegisterView(CreateView):
@@ -46,3 +46,13 @@ class UserLogoutView(LogoutView):
     """Выход из системы."""
 
     next_page = reverse_lazy('users:login')
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """Редактирование профиля текущего пользователя."""
+
+    form_class = UserProfileForm
+    template_name = 'users/profile.html'
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user

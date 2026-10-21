@@ -38,3 +38,25 @@ class UserLoginForm(AuthenticationForm):
         label='Пароль',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}),
     )
+
+
+class UserProfileForm(forms.ModelForm):
+    """Форма редактирования профиля пользователя."""
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'avatar', 'phone', 'country')
+        labels = {
+            'email': 'Электронная почта',
+            'avatar': 'Аватар',
+            'phone': 'Телефон',
+            'country': 'Страна',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
