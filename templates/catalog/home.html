@@ -1,3 +1,4 @@
+html
 {% extends 'base.html' %}
 
 {% block title %}Skystore — каталог{% endblock %}
@@ -16,7 +17,12 @@
 <div class="row text-center">
     {% for product in page_obj %}
     <div class="col-3">
-        <div class="card mb-4 box-shadow">
+        <div class="card mb-4 box-shadow position-relative">
+            {% if not product.is_published %}
+            <span class="badge bg-warning text-dark position-absolute" style="top: 10px; left: 10px; z-index: 1;">
+                Черновик
+            </span>
+            {% endif %}
             {% if product.image %}
             <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
             {% endif %}
@@ -28,6 +34,9 @@
                 <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                     <li>Категория: {{ product.category.name }}</li>
                     <li>{{ product.description|truncatechars:100 }}</li>
+                    {% if product.owner %}
+                    <li class="small text-muted">Владелец: {{ product.owner.email }}</li>
+                    {% endif %}
                 </ul>
                 <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее</a>
             </div>
