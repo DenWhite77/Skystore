@@ -1,14 +1,21 @@
 from django.db import models
 from django.conf import settings
+from django.utils.text import slugify
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Наименование')
+    slug = models.SlugField(max_length=100, unique=True, blank=True, verbose_name='Slug')
     description = models.TextField(blank=True, null=True, verbose_name='Описание')
 
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name, allow_unicode=True)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

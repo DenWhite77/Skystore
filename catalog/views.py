@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
@@ -6,7 +7,28 @@ from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 
 from .forms import ProductForm
-from .models import Contact, Product
+from .models import Category, Contact, Product
+from .services import get_products_by_category
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        cache_key = f'product_{pk}'
+
+        product = cache.get(cache_key)
+        if product is None:
+            product = super().get_object(queryset)
+            cache.set(cache_key, product, timeout=60 * 15)  # 15 минут
+            print(f'[CACHE] Продукт {pk} загружен из БД')
+        else:
+            print(f'[CACHE] Продукт {pk} из Redis')
+
+        return product
 
 
 class HomeView(ListView):
@@ -21,12 +43,6 @@ class HomeView(ListView):
         if self.request.user.is_authenticated and self.request.user.has_perm('catalog.can_unpublish_product'):
             return queryset
         return queryset.filter(is_published=True)
-
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'catalog/product_detail.html'
-    context_object_name = 'product'
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -89,6 +105,22 @@ class ProductUnpublishView(LoginRequiredMixin, View):
         product.save(update_fields=['is_published'])
 
         return redirect('catalog:product_detail', pk=pk)
+
+
+class CategoryProductsView(DetailView):
+    """Список продуктов в указанной категории (по slug)."""
+    model = Category
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'category'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category, products = get_products_by_category(self.kwargs.get('slug'))
+        context['category'] = category
+        context['products'] = products
+        return context
 
 
 class ContactsView(TemplateView):

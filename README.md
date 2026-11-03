@@ -189,6 +189,34 @@ python manage.py create_moderators_group
 4. Сохраните.
 5. Попросите пользователя **перелогиниться** (права кэшируются в сессии).
 
+
+## Кеширование
+
+Проект использует **Redis** для кеширования:
+
+- **Страница продукта** — `ProductDetailView` кеширует объект `Product` (ключ `product_{pk}`, TTL 15 минут).
+- **Список продуктов по категории** — сервис `get_products_by_category` кеширует список (ключ `category_{id}`, TTL 15 минут).
+
+### Настройка
+
+В `settings.py`:
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'skystore',
+        'TIMEOUT': 60 * 15,
+    }
+}
+
+### Запуск Redis (Docker)
+
+docker run -d --name skystore-redis -p 6379:6379 redis:7
+
 ## Автор
 
 DenWhite77
