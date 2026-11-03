@@ -156,3 +156,17 @@ DEFAULT_FROM_EMAIL = 'noreply@skystore.local'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'catalog:home'
 LOGOUT_REDIRECT_URL = 'catalog:home'
+
+
+# Redis / Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'skystore',
+        'TIMEOUT': 60 * 15,  # 15 минут по умолчанию
+    }
+}
